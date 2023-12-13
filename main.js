@@ -6,8 +6,13 @@ const btnNewGame = document.getElementById('reset-button');
 let gameOver = false;
 let userName;
 let mineCount; // Default mines
+
 const settings = document.querySelector('.settings');
 const returnBtn = document.querySelector('.return-btn');
+
+const timerDisplay = document.querySelector('.timer-display');
+const pointDisplay = document.querySelector('.point-display');
+
 function adjustDifficulty() {
   const difficultyInput = document.getElementById('difficulty');
   const diff = difficultyInput.value.toLowerCase();
@@ -56,12 +61,17 @@ function renderBoard() {
 
 // Creating board after button pressed
 btnNewGame.addEventListener('click', function () {
+  stopTimer();
+  resetTimer();
   userName = document.querySelector('.user-name').value;
   gameOver = false;
   board = createBoard(boardSize, adjustDifficulty());
   renderBoard();
+  startTimer();
   btnNewGame.textContent = 'Retry';
   returnBtn.style.display = 'block';
+  timerDisplay.style.display = 'block';
+  pointDisplay.style.display = 'block';
   console.log(board);
   console.log(adjustDifficulty());
 });
@@ -73,9 +83,13 @@ function resetBoard() {
 }
 
 returnBtn.addEventListener('click', function () {
+  stopTimer();
+  resetTimer();
   resetBoard();
   btnNewGame.textContent = 'New Game';
   returnBtn.style.display = 'none';
+  timerDisplay.style.display = 'none';
+  pointDisplay.style.display = 'none';
 });
 
 function disableClicks() {
@@ -100,6 +114,8 @@ function handleCellClick(event) {
     ); // in case of loose, show modal window
   } else {
     revealCell(row, col); // recursively 'opening' empty cells, as well as first cell countering bomb from any side
+    const openedCount = revealCell(row, col);
+    updatePoints(openedCount);
     checkWin(); // if user win game, modal window appear with congratulations
   }
 
@@ -112,6 +128,7 @@ function gameStatus() {
 
 function revealCell(row, col) {
   const cell = document.querySelector(`[data-row="${row}"][data-col="${col}"]`);
+  let openedCount = 0;
 
   // Check if the cell is not already revealed
   if (!cell.classList.contains('revealed')) {
@@ -120,11 +137,12 @@ function revealCell(row, col) {
     // If the cell has 0 adjacent mines, reveal all adjacent cells recursively
     if (adjacentMines === 0) {
       cell.classList.add('revealed', 'empty');
-
+      openedCount++;
       for (let i = row - 1; i <= row + 1; i++) {
         for (let j = col - 1; j <= col + 1; j++) {
           if (i >= 0 && i < board.length && j >= 0 && j < board[row].length) {
-            revealCell(i, j);
+            // revealCell(i, j);
+            openedCount += revealCell(i, j);
           }
         }
       }
@@ -132,8 +150,11 @@ function revealCell(row, col) {
       cell.textContent = adjacentMines;
       if (adjacentMines > 3) cell.classList.add('revealed', `number-3`);
       else cell.classList.add('revealed', `number-${adjacentMines}`);
+      openedCount++;
     }
   }
+
+  return openedCount;
 }
 
 function countAdjacentMines(row, col) {
@@ -170,7 +191,7 @@ function addFlag(e) {
     if (!clickedCell.classList.contains('revealed')) {
       // Add or remove the flag class
       clickedCell.classList.toggle('emoji-flag');
-
+      updateFlaggedMines();
       // Prevent the default behavior (e.g., context menu)
       e.preventDefault();
     }
@@ -218,4 +239,45 @@ function checkWin() {
     showModal('Congratulations! You won!');
   }
 }
-// Log the initial state of the board (for testing purposes)
+
+// Timer
+let timerInterval;
+let seconds = 0;
+
+function startTimer() {
+  timerInterval = setInterval(function () {
+    seconds++;
+    updateTimerDisplay();
+  }, 1000); // Update every 1000 milliseconds (1 second)
+}
+
+function stopTimer() {
+  clearInterval(timerInterval);
+}
+
+function resetTimer() {
+  stopTimer();
+  seconds = 0;
+  updateTimerDisplay();
+}
+
+function updateTimerDisplay() {
+  const timerDisplay = document.querySelector('.timer');
+  timerDisplay.textContent = seconds;
+}
+
+//
+// Points Mines updaters
+
+let flaggedMines = 0;
+
+function updatePoints(openedCount) {
+  const revealedCells = document.querySelectorAll('.revealed').length;
+  document.querySelector('.point-value').textContent = revealedCells;
+}
+
+function updateFlaggedMines() {
+  flaggedMines++;
+  document.querySelector('.mines-value').textContent = flaggedMines;
+}
+//

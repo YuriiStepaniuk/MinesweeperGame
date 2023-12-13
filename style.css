@@ -5,7 +5,38 @@ body {
   height: 100vh;
   margin: 0;
 
-  background: radial-gradient(#280a48, #20043d);
+  background: radial-gradient(rgb(40, 10, 72), #20043d);
+}
+
+.main {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.main .timer-display {
+  width: 80px;
+  display: none;
+  font-size: 32px;
+}
+
+.main .point-display {
+  display: none;
+  width: 120px;
+}
+
+.main .point-display .points-flex {
+  margin-left: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 28px;
+}
+
+.main span {
+  width: 100px;
+  color: wheat;
 }
 
 h1 {
@@ -136,16 +167,17 @@ button:hover {
 }
 
 .modal-content {
-  background-color: #fefefe;
+  background-color: rgba(40, 10, 72, 0.7);
   margin: 15% auto;
   padding: 20px;
   border: 1px solid #888;
   width: 50%;
   text-align: center;
+  color: wheat;
 }
 
 .close {
-  color: #aaa;
+  color: #f3f3f3;
   float: right;
   font-size: 28px;
   font-weight: bold;
