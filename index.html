@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <!-- <div class="enter-players">
+      <label for="">Enter first player name: </label><input type="text" />
+      <label for="">Enter first player name: </label><input type="text" />
+    </div> -->
+    <div id="minesweeper-container">
+      <div id="myModal" class="modal">
+        <div class="modal-content">
+          <span class="close" onclick="closeModal()">&times;</span>
+          <p id="modalText">Game Over! You lost.</p>
+        </div>
+      </div>
+      <h1>Minesweeper</h1>
+      <div id="minesweeper-board"></div>
+      <div class="settings">
+        <div>
+          <label for="">Enter name of player: </label
+          ><input type="text" class="user-name" />
+        </div>
+        <div>
+          <label for="">Select difficulty: </label
+          ><select name="" id="difficulty">
+            <option value="easy">Easy</option>
+            <option value="medium">Medium</option>
+            <option value="hard">Hard</option>
+          </select>
+        </div>
+      </div>
+      <div class="btns">
+        <button id="reset-button">New Game</button>
+        <button class="return-btn">Return to Home</button>
+      </div>
+    </div>
+    <script src="./main.js"></script>
+  </body>
+</html>
